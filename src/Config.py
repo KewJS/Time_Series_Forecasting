@@ -66,7 +66,7 @@ class Config(object):
         FEATURE_ENGINEERING             = True,
         UNIVARIATE_OPTION               = True,
         SUPERVISED_LEARNING             = True,
-        MODEL_TYPE                      = 'Supervised', # Forecast, Supervised, Heuristics
+        MODEL_TYPE                      = 'Forecast', # Forecast, Supervised
         HOLT_WINTER_SEASON              = 7,
         HOLT_WINTER_TREND               = "add", # mul
         HOLT_WINTER_SEASONAL            = "add", # mul

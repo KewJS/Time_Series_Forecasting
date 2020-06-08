@@ -29,20 +29,20 @@ from pandas.plotting import lag_plot
 import seaborn as sns
 from pylab import rcParams
 
-from sklearn.ensemble import RandomForestRegressor, BaggingRegressor
+from sklearn.ensemble import RandomForestRegressor
 from lightgbm import LGBMRegressor
 from xgboost import XGBRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, LabelEncoder, OneHotEncoder
 from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_squared_log_error
 
-import keras
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
-from keras.layers import Dropout
-from keras.layers import *
-from keras.callbacks import EarlyStopping
+# import keras
+# from keras.models import Sequential
+# from keras.layers import Dense
+# from keras.layers import LSTM
+# from keras.layers import Dropout
+# from keras.layers import *
+# from keras.callbacks import EarlyStopping
 
 from src.Config import Config
 from .Model import Model
@@ -101,7 +101,7 @@ class Train(Config):
         HOLT_WINTER = dict(alg=ExponentialSmoothing, args=dict(seasonal_periods=Config.MODELLING_CONFIG["HOLT_WINTER_SEASON"], trend=Config.MODELLING_CONFIG["HOLT_WINTER_TREND"], seasonal=Config.MODELLING_CONFIG["HOLT_WINTER_SEASONAL"])),
         
         # # Recurrent Neural Network
-        LSTM = dict(alg=LSTM),
+        # LSTM = dict(alg=LSTM),
     )
 
 
