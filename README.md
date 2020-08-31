@@ -26,6 +26,9 @@ project_name
 |   └── base
 │       └── __init__.py
 |       └── logger.py
+|   └── Config.py
+|   └── cmd.py
+|   └── testing_tasks.py
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
