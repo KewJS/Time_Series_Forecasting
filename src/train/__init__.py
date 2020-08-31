@@ -6,6 +6,7 @@ from platform import uname
 import pandas as pd
 import numpy as np
 import datetime
+from math import sqrt
 from datetime import datetime
 import missingno as msno
 
@@ -57,38 +58,41 @@ class Train(Config):
 
     REGRESSION_ALGORITHMS = dict(
         # # Supervised Learning
-        XGBR = dict(alg=XGBRegressor, args=dict(silent=1, random_state=Config.MODELLING_CONFIG["RANDOM_STATE"], objective="reg:squarederror"), scaled=False), 
-        LGBMR = dict(alg=LGBMRegressor, args=dict(random_state=Config.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False), 
-        RFR = dict(alg=RandomForestRegressor, args=dict(n_estimators=100, random_state=Config.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False),
-        RFR_tuned = dict(alg=RandomForestRegressor, args=dict(n_estimators=100, random_state=Config.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False,
-                        param_grid={
-                            'max_depth':[None, 8, 10],
-                            'min_samples_split':[2, 4, 10],
-                            'max_features':[None, 3, 6],
-                        },
-                        ),            
-        XGBR_tuned = dict(alg=XGBRegressor, args=dict(silent=1, random_state=Config.MODELLING_CONFIG["RANDOM_STATE"], objective="reg:squarederror"), scaled=False, 
-                        param_grid={
-                            'learning_rate':[0.05, 0.1, 0.3, 0.5, 0.9],
-                            'max_depth': [2, 3, 6, 10, 13], #3
-                            'n_estimators': [20, 50, 100, 200, 500], #100
-                            #'booster': ['gbtree', 'dart'], #'gbtree'
-                            'colsample_bytree': [0.2, 0.5, 0.8, 1.0],
-                            'subsample': [0.2, 0.5, 0.8, 1.0],
-                            # 'early_stopping_rounds': [200],
+        XGBR = dict(alg=XGBRegressor, args=dict(silent=1, random_state=self.MODELLING_CONFIG["RANDOM_STATE"], objective="reg:squarederror"), scaled=False), 
+                LGBMR = dict(alg=LGBMRegressor, args=dict(random_state=self.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False), 
+                RFR = dict(alg=RandomForestRegressor, args=dict(n_estimators=100, random_state=self.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False),
+                RFR_tuned = dict(alg=RandomForestRegressor, args=dict(random_state=self.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False,
+                            param_grid={
+                                'n_estimators': [20, 50, 100, 200, 500], #100
+                                'max_depth':[2, 4, None, 8], #None
+                                'min_samples_split':[0.5, 2, 4, 10], #2
+                                'max_features':[1, 2, None, 3, 6], #auto
+                            },
+                ),
+                XGBR_tuned = dict(alg=XGBRegressor, args=dict(silent=1, random_state=self.MODELLING_CONFIG["RANDOM_STATE"], objective="reg:squarederror"), scaled=False, 
+                            param_grid={
+                                'learning_rate':[0.01, 0.05, 0.1, 0.3],#, 0.5, 0.9],
+                                'max_depth': [2, 3, 6, 10, 13], #3
+                                'n_estimators': [20, 50, 200],#, 500], #100
+                                #'booster': ['gbtree', 'dart'], #'gbtree'
+                                'colsample_bytree': [0.2, 0.5, 0.8, 1.0],
+                                'subsample': [0.2, 0.5, 0.8, 1.0],
+                                # 'early_stopping_rounds': [200],
+                                
                             },            
-                            ),
-        LGBMR_tuned = dict(alg=LGBMRegressor, args=dict(random_state=Config.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False, 
-                        param_grid={
-                            'learning_rate':[0.05, 0.1, 0.3, 0.5, 0.9], #0.1
-                            'n_estimators': [20, 50, 100, 200, 500], #100
-                            'num_leaves': [20, 31, 100, 300], #31
-                            'subsample': [0.2, 0.5, 0.8, 1.0],
-                            'bagging_fraction': [0.2, 0.5, 0.8, 1.0],
-                            # 'early_stopping_rounds': [200]
-                            #'boosting' : ['gbdt', 'dart', 'goss'],
+                ),
+                LGBMR_tuned = dict(alg=LGBMRegressor, args=dict(random_state=self.MODELLING_CONFIG["RANDOM_STATE"]), scaled=False, 
+                            param_grid={
+                                'learning_rate':[0.01, 0.05, 0.1, 0.3, 0.9], #0.1
+                                'max_depth':[2, 3, 6],
+                                'n_estimators': [20, 50, 100, 200], #100
+                                'num_leaves': [4, 8, 64], #31
+                                # 'subsample': [0.2, 0.5, 0.8, 1.0],
+                                # 'bagging_fraction': [0.2, 0.5, 0.8, 1.0],
+                                # 'early_stopping_rounds': [200]
+                                #'boosting' : ['gbdt', 'dart', 'goss'],
                             },            
-                            ),
+                ),
     )
 
     SARIMA = pm.auto_arima
@@ -99,9 +103,6 @@ class Train(Config):
                                             start_P=0, D=0, start_Q=0, max_P=5, max_D=2, max_Q=5,
                                             seasonal=True, trace=True, error_action='ignore', suppress_warnings=True, stepwise=True)),
         HOLT_WINTER = dict(alg=ExponentialSmoothing, args=dict(seasonal_periods=Config.MODELLING_CONFIG["HOLT_WINTER_SEASON"], trend=Config.MODELLING_CONFIG["HOLT_WINTER_TREND"], seasonal=Config.MODELLING_CONFIG["HOLT_WINTER_SEASONAL"])),
-        
-        # # Recurrent Neural Network
-        # LSTM = dict(alg=LSTM),
     )
 
 
@@ -685,6 +686,54 @@ class Train(Config):
             
             if self.best_district != []:
                 self.bests[metric] = self.bests[metric].loc[self.best_district]
+
+    
+    def ADF_Stationarity_Test(self, time_series, print_results=True):
+        """Augmented Dickey-Fuller (ADF) test
+
+        Dickey-Fuller test is a type of unit root test. Unit root are a cause for non-stationary,  
+        the ADF test will test test if unit root is present. 
+
+        .. note::
+            A time series is stationary if a single shift in time doesn't change the time series statistical properties,
+            in which case unit root does not exist
+
+        The Null and Alternate hypothesis of the Augmented Dickey-Fuller test is defined as follow:
+            * **Null Hypothesis**: There is the presence of a unit root
+            * **Alternate Hypothesis**: There is not unit root
+
+        Parameters
+        ----------
+        time_series : array-like
+            An array of time series data to be tested on stationarity
+        print_results : boolean (default=True)
+            Option to decide whether to print the results of ADF testing
+
+        Returns
+        -------
+        p_value : 
+            P-value determined from ADF test
+        is_stationary :
+            Boolean on whether the time series is stationary or not
+        dfResults :
+            Dictionary of result from ADF testing
+        """
+        adfTest = adfuller(timeseries, autolag='AIC')
+        
+        self.p_value = adfTest[1]
+        
+        if (self.p_value < self.MODELLING_CONFIG["SIGNIFICANCE_LEVEL"]):
+            self.is_stationary = True
+        else:
+            self.is_stationary = False
+        
+        if print_results:
+            dfResults = pd.Series(adfTest[0:4], index=['ADF Test Statistic','P-Value','Lags Used','Observations Used'])
+            ## Add Critical Values
+            for key,value in adfTest[4].items():
+                dfResults['Critical Value (%s)'%key] = value
+            print('Augmented Dickey-Fuller Test Results:')
+            print(dfResults)
 
     
     @staticmethod

@@ -45,11 +45,12 @@ class Config(object):
     ANALYSIS_CONFIG = dict(
         FOURIER_SPECTRAL_COMPONENTS = 50,
         ROLLING_STEPSIZE            = 3,
-        INTERPOLATE_DIRECTION       = "both",
+        INTERPOLATE_DIRECTION       = "both", # left, right
         INTERPOLATE_ORDER           = 3,
         )
 
     MODELLING_CONFIG = dict(
+        SIGNIFICANCE_LEVEL              = 0.05,
         KNN_NEIGHBOUR                   = 5,
         IMPUTE_MISSING_PERCENT_THRES    = 0.8,
         ENCODING_ALG                    = 'Ordinal', # One-Hot
@@ -66,7 +67,7 @@ class Config(object):
         FEATURE_ENGINEERING             = True,
         UNIVARIATE_OPTION               = True,
         SUPERVISED_LEARNING             = True,
-        MODEL_TYPE                      = 'Forecast', # Forecast, Supervised
+        MODEL_TYPE                      = 'Supervised', # Forecast
         HOLT_WINTER_SEASON              = 7,
         HOLT_WINTER_TREND               = "add", # mul
         HOLT_WINTER_SEASONAL            = "add", # mul
@@ -111,19 +112,19 @@ class Config(object):
         ],
 
         Feature_Engineer = [
-            dict(var="Prod_Sales_MA_7",     unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Prod_Sales_MA_21",    unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="26_EMA",              unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="12_EMA",              unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="MACD",                unit="",    min=-200,   max=26000,  impute="interp",    predictive=True),
-            dict(var="20_SD",               unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Upper_BB",            unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Lower_BB",            unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Prod_Sales_ROC",      unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Prod_Sales_EMA",      unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Prod_Sales_Momentum", unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Fourier_50",          unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
-            dict(var="Prod_Sales_ARIMA",    unit="",    min=0,      max=26000,  impute="interp",    predictive=True),
+            dict(var="Prod_Sales_MA_7",     unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Prod_Sales_MA_21",    unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="26_EMA",              unit="",    min=0,      max=26000,  impute="      ",    predictive=True),
+            dict(var="12_EMA",              unit="",    min=0,      max=26000,  impute="      ",    predictive=True),
+            dict(var="MACD",                unit="",    min=-200,   max=26000,  impute="      ",    predictive=False),
+            dict(var="20_SD",               unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Upper_BB",            unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Lower_BB",            unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Prod_Sales_ROC",      unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Prod_Sales_EMA",      unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Prod_Sales_Momentum", unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Fourier_50",          unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
+            dict(var="Prod_Sales_ARIMA",    unit="",    min=0,      max=26000,  impute="      ",    predictive=False),
         ]
     )
 

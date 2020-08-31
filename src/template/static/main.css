@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+}
+
+h1 {
+    color: rgb(170, 152, 152);
+    padding: 5px;
+    margin-right: 0;
+}
+
+p {
+    background: rgb(187, 224, 236);
+    padding: 15px;
+    margin-top: 0;
+}
+
+ul li a {
+    text-decoration: none;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+    background: #222;
+    color: #f15025;
+    padding: 5px;
+    margin: 10px 10px;
+}
+
+.outer {
+    width: 400;
+    height: 200px;
+    background: blue;
+}
+
+.inner {
+    width: 100%;
+    height: 50%;
+    background: red;
+}
+
+
+/*
+em - RELATIVE depends on parent, like parent div
+1em = 16px default broswer style; base value 
+vh = height - percent of the screeen
+vw = width - percent of the screen
+*/
+
+div {
+    font-size: 20px;
+    border: 1px solid black;
+    border-radius: 0;
+}
+
+
+/* .data_summary {
+    font-size: 2em;
+}
+
+.data_quantity {
+    font-size: 32px;
+} */
